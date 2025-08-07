@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta charset="UTF-8">
+  <title>Motivation</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding: 0 20px;
+    }
+
+    .quote-box {
+      margin-top: 25vh;
+      font-size: 24px;
+      font-weight: bold;
+      min-height: 80px;
+    }
+
+    .buttons {
+      margin-top: 40px;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 18px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 10px;
+      background-color: white;
+      color: deeppink;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    a {
+      color: white;
+      font-size: 18px;
+      display: block;
+      margin-top: 30px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="quote-box" id="quote">Loading...</div>
+
+  <div class="buttons">
+    <button onclick="shuffleQuote()">Next</button>
+  </div>
+
+  <a href="love.html">← Back</a>
+
+  <script>
+    let quotes = [];
+    let index = 0;
+
+    fetch('quotes.json')
+      .then(response => {
+        if (!response.ok) throw new Error("Quotes file not found");
+        return response.json();
+      })
+      .then(data => {
+        quotes = data;
+        index = Math.floor(Math.random() * quotes.length);
+        document.getElementById("quote").textContent = quotes[index];
+      })
+      .catch(error => {
+        document.getElementById("quote").textContent = "Could not load quotes.";
+        console.error(error);
+      });
+
+    function shuffleQuote() {
+      if (quotes.length > 0) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * quotes.length);
+        } while (randomIndex === index && quotes.length > 1);
+
+        index = randomIndex;
+        document.getElementById("quote").textContent = quotes[index];
+      }
+    }
+
+    function previousQuote() {
+      if (quotes.length > 0) {
+        index = (index - 1 + quotes.length) % quotes.length;
+        document.getElementById("quote").textContent = quotes[index];
+      }
+    }
+  </script>
+</body>
+</html>

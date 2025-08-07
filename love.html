@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Love</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: lightpink;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .hold-btn {
+      padding: 14px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      background-color: white;
+      color: deeppink;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .hold-btn.holding {
+      background-color: #ffd6e7;
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="button-row">
+    <button class="hold-btn" id="btn1">I</button>
+    <button class="hold-btn" id="btn2">Love</button>
+    <button class="hold-btn" id="btn3">You</button>
+  </div>
+
+  <script>
+    function setupHold(buttonId, targetUrl) {
+      const button = document.getElementById(buttonId);
+      let timer;
+
+      const startHold = () => {
+        button.classList.add('holding');
+        timer = setTimeout(() => {
+          window.location.replace(targetUrl); // better than href
+        }, 5000);
+      };
+
+      const cancelHold = () => {
+        clearTimeout(timer);
+        button.classList.remove('holding');
+      };
+
+      button.addEventListener("pointerdown", startHold);
+      button.addEventListener("pointerup", cancelHold);
+      button.addEventListener("pointerleave", cancelHold);
+      button.addEventListener("pointercancel", cancelHold);
+    }
+
+    setupHold("btn1", "voicenote.html");
+    setupHold("btn2", "letter.html");
+    setupHold("btn3", "motivate.html");
+
+    // Force reload if user comes back from other page
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+        location.reload(true);
+      }
+    });
+  </script>
+</body>
+</html>
